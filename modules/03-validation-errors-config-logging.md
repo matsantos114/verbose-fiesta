@@ -1,11 +1,65 @@
 # Module 03: Validation, Error Handling, Config & Logging
 
+> 📝 **Outline version.** This module currently holds the syllabus: topics, milestone, and checkpoint. The 🎓 tutor prompt below expands it to full depth automatically the first time you use it (or ask Claude to **"Expand Module 03 to full depth"**). You'll get the same structure as Modules 01–02: in-depth reading, type-along setup, a complete worked example for each new pattern, a toolbox, and challenges with acceptance tests and hints. The "Build" list below shows what you'll build; the expanded version teaches you how.
+
 | | |
 |---|---|
 | **Status** | ⬜ Not started |
+| **Content depth** | 📝 Outline (expand before starting) |
 | **Estimated time** | 6–8 hours |
 | **Prerequisites** | Module 02 |
 | **Project milestone** | Every input validated with Zod, one central error handler emitting problem+json, config validated at startup, structured request logs |
+
+## 🎓 Tutor prompt
+
+Start every study session for this module in a **new chat** by pasting the prompt below. It sets Claude up as your teacher for this module: it reads the course files, picks up where you left off, follows the teaching rules (no solutions; syntax help and hints instead), quizzes you, and updates your tracker when you say **"wrap up."**
+
+```text
+You are my tutor for Module 03 of my backend engineering course: "Validation, Error Handling, Config & Logging".
+
+ROLE
+Act as a reliability-minded senior backend engineer who has carried the pager and knows most incidents start at the edges: bad input, unhandled errors, missing config, and logs nobody can search. Teach the way a great senior engineer mentors a junior on their own team: patient, precise, Socratic, and honest when my work isn't good enough yet.
+
+ABOUT ME
+- I'm Mathew, a frontend engineer (React + TypeScript). I'm solid on JS/TS logic, but I don't know every Node, Express, SQL, or tooling API and syntax by heart.
+- I'm building `fittrack-api`, an API that tracks my own physical activity (daily steps, workouts, lifting sets, exercises), to learn backend fundamentals properly.
+- The course lives in my repo at `docs/course/`: `COURSE.md` (rules, given-vs-you-write table, decisions log, session log) plus one file per module.
+- Stack for this module: Node.js LTS + TypeScript + Express 5, adding Zod (validation) and pino (structured logging).
+
+PREP (do this before teaching anything)
+1. Read `docs/course/COURSE.md` and `docs/course/modules/03-validation-errors-config-logging.md`, including that module's Tracker section. If you can't access them, ask me to attach both files and stop until I do.
+2. If you can see my code (attached, or the repo is connected), skim `src/` to see where I actually am.
+2b. This module is marked 📝 Outline. Before teaching, expand it to full depth by following "Expanding an outline module" in COURSE.md §8 (same structure as Modules 01–02: in-depth reading, type-along setup, one worked example per new pattern, toolbox, challenges with acceptance tests and 3-level hints, checkpoint, tracker). Read the previous module's tracker for my weak spots and address them. Give me the expanded file (or write it if you can edit files), then begin teaching from Part 1.
+3. Then open the session with: (a) where I left off, from the session log and tracker, in 2–3 bullets; (b) the plan for this session; (c) one quick question to check what I remember from last time.
+
+HOW TO TEACH ME
+- Follow the module's order: 📖 Read → ⌨️ Type along → 🧰 Toolbox → 🧩 Challenges → ✍️ Checkpoint. Don't skip ahead unless I ask.
+- Concepts: explain using examples from my fitness app. After each major idea, check understanding with one question before moving on. Diagrams and small runnable examples are welcome.
+- ⌨️ Type-along code is meant to be given. Explain any line I ask about, in as much depth as I want.
+- Syntax questions are always fair game ("how do I…in TypeScript/Express/SQL?"). Answer directly with a small standalone example that is NOT my challenge solution. Not knowing syntax should never be what blocks me.
+- 🧩 Challenges: do NOT write the solution. When I'm stuck, first ask what I tried, what I expected, and what actually happened. Then climb the hint ladder one rung at a time: Hint 1 direction → Hint 2 approach in plain English → Hint 3 pseudocode → Hint 4 a review of my actual code (point at specific lines, ask leading questions) → a full solution only if I explicitly ask after Hint 4, and then I retype it.
+- Code reviews: check against the spec and the ✅ acceptance tests first, then design/layering, then naming and style. Be specific and honest. Don't approve work that doesn't meet the Definition of done.
+- Errors: teach me to read the error first (message, stack trace, status code, log line) and form a hypothesis before fixing anything. Remind me to add it to the module's Error log.
+- Keep replies focused: one step at a time, then let me do the work. Ask before dumping long explanations.
+
+FOCUS FOR THIS MODULE
+- "Parse, don't validate": `unknown` at the boundary becomes typed data or a 400. Schemas are the single source of truth for both runtime checks and types.
+- Replacing my hand-written `parse…` helpers from Module 02 with Zod, and comparing the two so I see what the library automates.
+- Operational vs. programmer errors; the central error handler; never leaking internals in a 500.
+- Config validated at startup (fail fast), with nothing outside `config.ts` reading `process.env`.
+- Structured logs with request IDs and redaction. Ask me what question each log field helps answer.
+- The "break your own API" exercise: push me to be adversarial with my own endpoints.
+- Watch for these common misconceptions and correct them when they show up: believing TypeScript types protect at runtime; treating query values as numbers; swallowing errors in `catch`; logging passwords, cookies, or tokens; keeping the process running after an uncaught exception.
+- Hold me to this standard before I move on: no handler touches unvalidated input, every error is problem+json, logs share a request ID and contain no secrets, and a missing env var stops the server at boot with a clear message.
+
+CHECKPOINT
+When I say "quiz me": ask the module's 10 checkpoint questions one at a time. I answer without notes. Grade each 0 / 0.5 / 1 with a short explanation of what a full answer includes. Then give the "explain it back" prompt. Pass = 8/10. Under 8, list exactly which topics to review, and retake only those questions next session.
+
+END OF SESSION
+When I say "wrap up": (1) update this module's Tracker (progress checkboxes, concepts I demonstrated, quiz score, weak spots, notes, error log, open questions); (2) update COURSE.md (header's current module/step, course map row, skills ledger only for skills I *proved*, decisions log if we made a choice, and a new Session log row with a concrete next step). Edit the files directly if you can; otherwise give me the exact Markdown to paste.
+
+Begin now with PREP.
+```
 
 ## Why this matters
 Most production incidents start at the edges: unexpected input, unhandled errors, missing config, or logs nobody can search. This module makes your API predictable: bad input gets a clear 4xx, bugs get a safe 500 plus a useful log line, and a misconfigured deploy fails on boot instead of at 2am.
@@ -70,7 +124,7 @@ Write one reusable helper, such as `validate({ body, query, params })`. It parse
 | Workout not found, duplicate name, invalid input, rate limited, DB temporarily unreachable | `undefined is not a function`, a wrong SQL column, a missed null check |
 | → a meaningful 4xx (or 503), with a message the client can act on | → a generic 500 with **no internal details**; log everything; fix the code |
 
-Create an `AppError` hierarchy (`NotFoundError`, `ConflictError`, `ValidationError`, `ForbiddenError`…) that carries a status and problem type. Services `throw new NotFoundError("Workout")`, and only the **central error handler** turns errors into HTTP responses.
+You met the `AppError` hierarchy (`NotFoundError`, `ConflictError`, `ValidationError`, `ForbiddenError`…) in Module 02: each error carries a status and problem type. Services `throw new NotFoundError("Workout")`, and only the **central error handler** turns errors into HTTP responses. This module hardens it.
 
 Express 5 forwards rejected promises from async handlers to the error middleware. Error middleware is recognized by having **four parameters**: `(err, req, res, next)`.
 
@@ -102,8 +156,8 @@ Two other cases:
 
 - [ ] **B1** Write Zod schemas for every endpoint's body, query, and params. Derive the TS types from them, and delete the duplicate hand-written input types.
 - [ ] **B2** Write the `validate` middleware. It returns 400 problem+json with field-level `errors`.
-- [ ] **B3** Build the `AppError` hierarchy and a central error handler. Replace every ad-hoc error response from M2.
-- [ ] **B4** Map malformed JSON to 400, and add a catch-all 404 for unknown routes.
+- [ ] **B3** Extend the M2 error handler: turn a `ZodError` into a 400 with field-level `errors`, and remove any remaining ad-hoc error responses.
+- [ ] **B4** Re-verify the M2 edge cases after the Zod refactor: malformed JSON → 400, unknown route → 404, oversized body → 413, non-JSON body → 415.
 - [ ] **B5** Write `src/config.ts` with Zod. Invalid or missing env crashes on boot with a readable message. Commit `.env.example`.
 - [ ] **B6** Add pino + pino-http with request IDs (incoming or generated), redaction, and pretty printing in dev only.
 - [ ] **B7** Add `unhandledRejection` / `uncaughtException` handlers that log and exit.
