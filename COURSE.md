@@ -7,7 +7,7 @@
 | **Learner**         | Mathew                                            |
 | **Started**         | 2026-10-11                                        |
 | **Current module**  | 01: HTTP & Node.js Foundations                    |
-| **Current step**    | Not started (begin with 01 → Part 1: Concepts)    |
+| **Current step**    | 01 → finish Part 1 (1.13–1.14), then Part 2 setup |
 | **Overall status**  | 🟨 In progress                                    |
 | **Estimated total** | ~130–160 hours (about 4–5 months at 7–8 hrs/week) |
 
@@ -135,7 +135,7 @@ fittrack-api/
 
 | #   | Module                                                                                        | Core skills                                                                              | Project milestone                                                  | Depth      | Status | Quiz | Completed |
 | --- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ---------- | ------ | ---- | --------- |
-| 01  | [HTTP & Node.js Foundations](modules/01-http-and-node-foundations.md)                         | HTTP messages, methods, status codes, event loop, TS project setup                       | `/health` and `/echo` in raw `node:http`, then Express             | ✅ Full    | ⬜     | —    | —         |
+| 01  | [HTTP & Node.js Foundations](modules/01-http-and-node-foundations.md)                         | HTTP messages, methods, status codes, event loop, TS project setup                       | `/health` and `/echo` in raw `node:http`, then Express             | ✅ Full    | 🟨     | —    | —         |
 | 02  | [API Design & Architecture](modules/02-api-design-and-architecture.md)                        | REST resource modeling, pagination, errors, versioning, layered architecture             | In-memory CRUD for steps, exercises, workouts, sets                | ✅ Full    | ⬜     | —    | —         |
 | 03  | [Validation, Errors, Config & Logging](modules/03-validation-errors-config-logging.md)        | Trust boundaries, Zod, central error handling, 12-factor config, structured logs         | Bulletproof input handling, problem+json errors, pino              | 📝 Outline | ⬜     | —    | —         |
 | 04  | [Relational Data Modeling & SQL](modules/04-relational-modeling-and-sql.md)                   | Schema design, types, constraints, normalization, migrations, SQL fluency                | Postgres in Docker, your own migration runner, seed data, SQL kata | 📝 Outline | ⬜     | —    | —         |
@@ -224,6 +224,7 @@ Add a row at the end of every session. Write "Next step" so that a cold start in
 | 2026-10-11 | —      | Course created                                                                                                                                                                                                                                                                                                                                   | —                                                                | M01 → Learn 1.1–1.9, then Build B1                          |
 | 2026-10-12 | —      | Course revised after feedback ("I can't be challenged if I don't know the direction"). New I do → we do → you do structure. M01 and M02 rewritten at full depth (guided setup with every config line explained, worked examples, toolboxes, specs with acceptance tests, inline hints). M03–M10 marked as outlines, to be expanded just in time. | Needed more teaching material and guided setup before challenges | M01 → Part 1 (Concepts), then Part 2 (Setup)                |
 | 2026-10-12 | —      | Added a 🎓 tutor prompt to every module (role, prep, teaching rules, module focus, quiz and wrap-up protocol)                                                                                                                                                                                                                                    | —                                                                | Paste the M01 tutor prompt into a new chat and start Part 1 |
+| 2026-10-18 | 01     | Tutor session 1: discussed Part 1 concepts 1.1–1.12 (request lifecycle, URLs, HTTP message anatomy, methods and idempotency, status codes, characters vs bytes, statelessness, what Node is, event loop order). No code written yet. | Struggled with path vs query params, curl flags vs the HTTP message, 401/403 and 404/405, 4xx vs 5xx, and microtask vs macrotask vs synchronous ordering. Strong on idempotency and bytes vs characters. | Read 1.13–1.14, then start Part 2 (setup) and scaffold `fittrack-api` |
 
 ---
 

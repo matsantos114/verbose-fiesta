@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | ⬜ Not started |
+| **Status** | 🟨 In progress |
 | **Content depth** | ✅ Full |
 | **Estimated time** | 10–14 hours |
 | **Prerequisites** | None. This module includes all setup. |
@@ -1474,10 +1474,10 @@ Answer without notes. Say *"Quiz me on Module 01"* in a chat, and Claude will as
 
 ## 📋 Tracker
 
-**Status:** ⬜ · **Started:** — · **Completed:** — · **Quiz score:** — / 10
+**Status:** 🟨 · **Started:** 2026-10-18 · **Completed:** — · **Quiz score:** — / 10
 
 ### Progress
-- [ ] Part 1: Concepts read (1.1–1.14)
+- [ ] Part 1: Concepts read (1.1–1.14). *Done so far: 1.1–1.12 discussed with the tutor. Still to do: 1.13 (async/await on a server) and 1.14 (streams and Buffers).*
 - [ ] Part 2: Setup complete and pushed
 - [ ] Part 3: Worked example typed and run
 - [ ] Challenge 1: 405
@@ -1496,7 +1496,7 @@ Answer without notes. Say *"Quiz me on Module 01"* in a chat, and Claude will as
 - [ ] HTTP message anatomy (1.5)
 - [ ] Methods, safety, idempotency (1.6)
 - [ ] Choosing status codes (1.7)
-- [ ] Characters vs bytes; JSON pitfalls (1.9)
+- [x] Characters vs bytes; JSON pitfalls (1.9). *Explained that Content-Length counts bytes; chose `Buffer.byteLength`; confirmed `"🏃"` is 2 vs 4.*
 - [ ] Statelessness (1.10)
 - [ ] The event loop; blocking vs non-blocking (1.12)
 - [ ] Streams and Buffers (1.14)
@@ -1520,18 +1520,26 @@ Answer without notes. Say *"Quiz me on Module 01"* in a chat, and Claude will as
 3.
 
 ### Checkpoint weak spots
-—
+- **Path vs query parameters (1.4).** Needed several attempts. Kept putting `user_id` in `/workouts/{user_id}` and wrote bare query words like `asc`. Rule to remember: an ID in the path means one item; query `key=value` pairs shape a list. Plan: write a small `GET /steps/:date` route after Challenge 4 to practice it.
+- **Curl flags vs the HTTP message.** Mixed up `-X`/`-H`/`-d` with the request itself. The message is the request line (method, target, version), headers, a blank line, then the body.
+- **401 vs 403, and 404 vs 405.** First attempt picked 401 for a logged-in user and 200 for `DELETE /health`. After correction: 401 = not authenticated, 403 = authenticated but not allowed, 405 = path exists but the method isn't supported (with an `Allow` header).
+- **4xx vs 5xx.** Called a server `TypeError` on a valid request a client error. Rule: client's input is the problem → 4xx; valid request but our code broke → 5xx.
+- **Event loop ordering (1.12).** Got `1, 4, 2, 3` instead of `1, 4, 3, 2`. Confused microtasks beating macrotasks with beating synchronous code. Also thought code after an `await` runs synchronously. Order is: synchronous code, then microtasks, then macrotasks. Run experiments from a file, not the Node REPL.
 
 ### Notes
-—
+- Session 1 (2026-10-18): covered 1.1–1.12 by discussion, no code written yet. Strong spots: request lifecycle once the terms were explained (DNS, TCP, port), idempotency and why POST needs an idempotency key (M8), characters vs bytes, and thinking to ask what a module system is for.
+- Port vs connection: the port is the numbered door that picks the program; the TCP connection is the pipe.
+- Node = V8 + libuv + standard library. `node:http` comes from the standard library, not V8.
+- Habit to build: write down a prediction before running anything.
 
 ### Error log
 | Error | Cause | Fix |
 |---|---|---|
-| | | |
+| Event-loop experiment printed `undefined`, then `C B A` | Pasted the code into the Node REPL, which evaluates input differently from a file | Run the code from a file (`node file.mjs` or `npx tsx file.ts`); correct order was `B C A` |
 
 ### Open questions
-—
+- How do ES modules and CommonJS differ in practice? (I know `import` vs `require` and that this course uses ES modules; still to see the `.js` extension rule in action.)
+- What does the parser actually do with the bytes? (Understood at a high level; revisit when reading the stream in Challenge 2.)
 
 ## Resources
 - MDN, An overview of HTTP: https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview
