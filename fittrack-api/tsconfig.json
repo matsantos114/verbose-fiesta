@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    /* What JavaScript to produce, and which built-in types exist */
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "types": ["node"],
+
+    /* How imports work */
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "verbatimModuleSyntax": true,
+
+    /* Where files go */
+    "rootDir": "src",
+    "outDir": "dist",
+    "sourceMap": true,
+
+    /* How strict the type checker is */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Compatibility and speed */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src"]
+}
